@@ -13,8 +13,7 @@ def convert_to_prompt(sentence1, sentence2, answer):
     <answer>
     """
 
-train = []
-train_augmented = []
+train_augmented = {}
 
 for row in MRPC[train]:
     s1 = row[sentence1]
@@ -22,21 +21,28 @@ for row in MRPC[train]:
     l = yes if row[label] else no
 
     prompt = convert_to_prompt(s1, s2, l)
-    new_prompt = prompt
+    add to train_augmented
 
-    for noun in new_prompt:
-        50% to replace noun in new_prompt with synonym
+    for noun in sentence1:
+        50% to replace noun in sentence1 with synonym
+    do same for sentence2
     #TODO label verification
     
-    train += {"prompt": prompt}
-    train_augmented += {"prompt": prompt}
-                    += {"prompt": new_prompt}
+    add augmented prompt to train_augmented
 
-validation = [{
-    "prompt": convert_to_prompt(s1,s2,""),
+train = {
+    "text": built prompt from s1,s2,label
+} for all s1,s2,label in dataset
+
+validation = {
+    "text": built prompt from s1,s2,
     "label": label
-} for s1,s2,label in ds[validation]]
-test = ^ same logic as above
+} for all s1,s2,label in dataset
+
+test = {
+    "text": built prompt from s1,s2,
+    "label": label
+} for all s1,s2,label in dataset
 
 dataset = {
     train,
