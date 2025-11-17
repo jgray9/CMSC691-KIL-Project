@@ -1,0 +1,98 @@
+######################################################
+### create dataset
+######################################################
+
+ds = load MRPC
+nlp = spacy
+
+def convert_to_prompt(sentence1, sentence2, answer):
+    combine sentences and answer into prompt and return
+    """Sentence 1: <sentence1>
+    Sentence 2: <sentence2>
+    Do these sentences mean the same thing? Write 'Yes' if they do, and 'No' if they don't.
+    <answer>
+    """
+
+train = []
+train_augmented = []
+
+for row in MRPC[train]:
+    s1 = row[sentence1]
+    s2 = row[sentence2]
+    l = yes if row[label] else no
+
+    prompt = convert_to_prompt(s1, s2, l)
+    new_prompt = prompt
+
+    for noun in new_prompt:
+        50% to replace noun in new_prompt with synonym
+    #TODO label verification
+    
+    train += {"prompt": prompt}
+    train_augmented += {"prompt": prompt}
+                    += {"prompt": new_prompt}
+
+validation = [{
+    "prompt": convert_to_prompt(s1,s2,""),
+    "label": label
+} for s1,s2,label in ds[validation]]
+test = ^ same logic as above
+
+dataset = {
+    train,
+    train_augmented,
+    validation,
+    test
+}
+save dataset to file
+
+######################################################
+### fine tune model
+######################################################
+
+MODELNAME = model name
+SPLIT = dataset split
+FILENAME = file name to save to
+
+load custom dataset[SPLIT]
+load MODELNAME model and tokenizer
+training_arguments = ... (constant for every train)
+train model using SFTTrainer
+print example output on first training sample
+save model to FILENAME
+
+######################################################
+### evaluate
+######################################################
+
+MODELNAME = model name
+SPLIT = dataset split
+
+load custom dataset[SPLIT]
+load MODELNAME model and tokenizer
+
+tp = 0
+tn = 0
+fp = 0
+fn = 0
+nan = 0 # number of times model answered neither yes or no
+
+for prompt,label in dataset:
+    with torch no grad:
+        output = feed prompt to model
+    answer = output[0..2]
+    if answer = yes:
+        if label = yes:
+            tp++
+        else fp++
+    elif answer = no:
+        if label = yes:
+            fn++
+        else tn++
+    else
+        nan++
+
+accuracy = (tp+tn) / N
+precision = tp / tp+fp
+recall = tp / tp+fn
+f1 score = (2*tp) / (2*tp+fp+fn)
