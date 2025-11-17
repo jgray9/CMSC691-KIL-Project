@@ -1,5 +1,5 @@
 Requires libraries:
 
-`pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu130`
+`pip install torch transformers datasets spacy nltk`
 
-`pip install transformers datasets spacy nltk`
+`python -m spacy download en_core_web_sm`
