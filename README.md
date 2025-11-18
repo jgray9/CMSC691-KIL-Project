@@ -1,5 +1,7 @@
 Requires libraries:
 
-`pip install torch transformers datasets spacy nltk`
+`https://pytorch.org/get-started/locally/`
+
+`pip install transformers datasets accelerate spacy nltk`
 
 `python -m spacy download en_core_web_sm`
