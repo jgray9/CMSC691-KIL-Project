@@ -1,0 +1,101 @@
+roberta
+Results       
+Accuracy:   84.26%    
+Precision:  84.26%    
+Recall:     84.26%    
+F1 Score:   84.26%    
+Guesses:    [578, 578]
+
+roberta-augmented
+Results       
+Accuracy:   84.26%    
+Precision:  83.90%    
+Recall:     84.78%    
+F1 Score:   84.34%    
+Guesses:    [572, 584]
+
+bert
+Results       
+Accuracy:   84.86%    
+Precision:  84.44%    
+Recall:     85.47%    
+F1 Score:   84.95%    
+Guesses:    [571, 585]
+
+bert-augmented
+Results       
+Accuracy:   79.33%    
+Precision:  77.65%    
+Recall:     82.35%    
+F1 Score:   79.93%    
+Guesses:    [543, 613]
+
+distilibert
+Results       
+Accuracy:   69.55%    
+Precision:  67.33%    
+Recall:     75.95%    
+F1 Score:   71.38%    
+Guesses:    [504, 652]
+
+distilibert augmented
+Results       
+Accuracy:   69.38%    
+Precision:  65.56%    
+Recall:     81.66%    
+F1 Score:   72.73%    
+Guesses:    [436, 720]
+
+
+
+
+
+following is done wit roberta
+
+adjective (original)
+Results       
+Accuracy:   84.26%    
+Precision:  84.26%    
+Recall:     84.26%    
+F1 Score:   84.26%    
+Guesses:    [578, 578]
+
+adjective-augmented (original)
+Results       
+Accuracy:   84.26%    
+Precision:  83.90%    
+Recall:     84.78%    
+F1 Score:   84.34%    
+Guesses:    [572, 584]
+
+noun
+Results       
+Accuracy:   84.34%    
+Precision:  84.28%    
+Recall:     84.43%    
+F1 Score:   84.36%    
+Guesses:    [577, 579]
+
+noun-augmented
+Results       
+Accuracy:   84.95%    
+Precision:  84.12%    
+Recall:     86.16%    
+F1 Score:   85.13%    
+Guesses:    [564, 592]
+
+verb
+Results       
+Accuracy:   84.26%    
+Precision:  84.26%    
+Recall:     84.26%    
+F1 Score:   84.26%    
+Guesses:    [578, 578]
+
+verb-augmented
+Results       
+Accuracy:   84.43%    
+Precision:  84.79%    
+Recall:     83.91%    
+F1 Score:   84.35%    
+Guesses:    [584, 572]
