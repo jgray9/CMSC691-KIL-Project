@@ -12,48 +12,79 @@ def convert-to-prompt(s1, s2):
     Sentence 2: {s2}
     Do these sentences mean the same thing? Write 'Yes' if they do, and 'No' if they don't."""
 
-def augment-wordnet(s):
-    nouns = list of nouns in s
-    if nouns empty return s
-    for n in nouns:
-        synonyms = list of synonyms for n
-        if no synonyms continue
-        replace first instance of n in s
-    return s
+def query-wordnet(word):
+    synsets = query wordnet
+    lemmas = combine lemmas from each set
+    syns = set of synonyms = name of lemmas
+    remove word from syns
+    return syns
 
-def augment-lesk(s):
-    nouns = list of nouns in s
-    if nouns empty return s
-    for n in nouns:
-        synonyms = list of synonyms for n using lesk
-        if no synonyms continue
-        replace first instance of n in s
-    return s
+def query-lesk(word, sen):
+    synset = run lesk
+    lemmas = lemmas from synset
+    syns = set of synonyms = name of lemmas
+    remove word from syns
+    return syns
 
-def augment-bert(s):
-    nouns = list of nouns in s
-    if nouns empty return s
+def query-bert(word, sen):
+    replace word in sen with [MASK]
+    inputs = tokenized sen
+    mask_idx = index of mask token in input tokens tensor
+    logits = run bert on inputs
+    logits = view only logits for mask_idx position
+
+    return dict{
+        word: decoded token,
+        score: logit score
+    }
+
+def augment-wordnet(sen):
+    nouns = list of nouns in sen
+    if nouns empty return sen
+    for n in nouns:
+        syn = query-wordnet(n)
+        if no synonyms continue
+        replace first instance of n with syn
+    return sen
+
+def augment-lesk(sen):
+    nouns = list of nouns in sen
+    if nouns empty return sen
+    for n in nouns:
+        synonyms = query-lesk(n, sen)
+        remove word from synonyms (if present)
+        if no synonyms continue
+        replace first instance of n in syn
+    return sen
+
+def augment-bert(sen):
+    nouns = list of nouns in sen
+    if nouns empty return sen
     for n in nonus:
-        replace first instance of n in s with MASK
-        preds = predictions from BERT
+        replace first instance of n with MASK
+        preds = query-bert(n, sen)
         replace MASK with highest rated prediction
-    return s
+    return sen
 
-def augment-hybrid(s):
-    nouns = list of nouns in s
-    if nouns empty return s
+def augment-hybrid(sen):
+    nouns = list of nouns in sen
+    if nouns empty return sen
     for n in nonus:
-        synonyms = list of synonyms for n
+        synonyms = query-lesk(n, sen)
         if no synonyms continue
-        preds = predictions from BERT
+        replace first instance of n with MASK
+        preds = query-bert(n, sen)
+        if no preds change MASK back to n and continue
         replace MASK with highest pred that is in synonyms
     return s
 
+prompts = {
 train-original = {text = list, label = list}
 train-augmented-wordnet = {text = list, label = list}
 train-augmented-lesk = {text = list, label = list}
 train-augmented-bert = {text = list, label = list}
 train-augmented-hybrid = {text = list, label = list}
+}
 
 for row in MRPC[train]:
     s1 = row[sentence1]
