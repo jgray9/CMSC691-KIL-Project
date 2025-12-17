@@ -125,13 +125,12 @@ MODELNAME = model name
 SPLIT = training split to use (ex. train-original, train-augmented-wordnet, ...)
 DIR = directory to save model to
 
-load dataset[SPLIT] and dataset[val]
-load MODELNAME model and tokenizer
-training_arguments = ... (constant for every train)
-train model using Trainer
-print example output on first training sample
-print metrics on val dataset
-save model to FILENAME
+for splitname in [train-original, train-augmented-wordnet, ...]
+    load MODELNAME model and tokenizer
+    training_arguments = ... (constant for every train except for directory)
+    train model using Trainer
+    print metrics on val dataset
+    save model to FILENAME (done by Trainer automatically)
 
 ######################################################
 ### evaluate
