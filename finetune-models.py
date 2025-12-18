@@ -1,6 +1,5 @@
 import os
 from datasets import load_from_disk
-from evaluate import eval_model
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, DataCollatorWithPadding, TrainingArguments, Trainer
 
 # 
@@ -25,35 +24,36 @@ SPLITS = [
 # Create Model Files
 # 
 os.mkdir("models")
-for dir, mname, split in zip(DIRS, MODELNAMES, SPLITS):
-    # 
-    # Load Objects
-    # 
-    model = AutoModelForSequenceClassification.from_pretrained(mname)
-    tokenizer = AutoTokenizer.from_pretrained(mname)
-    data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
+for dir, mname in zip(DIRS, MODELNAMES):
+    for split in SPLITS:
+        # 
+        # Load Objects
+        # 
+        model = AutoModelForSequenceClassification.from_pretrained(mname)
+        tokenizer = AutoTokenizer.from_pretrained(mname)
+        data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
-    if dir == 'gpt2':
-        tokenizer.pad_token = tokenizer.eos_token
-        model.config.pad_token_id = model.config.eos_token_id
-    # 
-    # Load & Prepare Data
-    # 
-    train_dataset = load_from_disk("dataset.hf")[split]
-    eval_dataset = load_from_disk("dataset.hf")['validation']
-    tokenized_train_dataset = train_dataset.map(lambda ds: tokenizer(ds['text']), batched=True, remove_columns=["text"])
-    # 
-    # Train
-    # 
-    training_arguments = TrainingArguments(
-        output_dir=f"models/{dir}" + split[split.find('-'):],
-        num_train_epochs=3,
-        save_strategy="epoch"
-    )
-    trainer = Trainer(
-        model=model,
-        args=training_arguments,
-        train_dataset=tokenized_train_dataset,
-        data_collator=data_collator
-    )
-    trainer.train()
+        if dir == 'gpt2':
+            tokenizer.pad_token = tokenizer.eos_token
+            model.config.pad_token_id = model.config.eos_token_id
+        # 
+        # Load & Prepare Data
+        # 
+        train_dataset = load_from_disk("dataset.hf")[split]
+        eval_dataset = load_from_disk("dataset.hf")['validation']
+        tokenized_train_dataset = train_dataset.map(lambda ds: tokenizer(ds['text']), batched=True, remove_columns=["text"])
+        # 
+        # Train
+        # 
+        training_arguments = TrainingArguments(
+            output_dir=f"models/{dir}" + split[split.find('-'):],
+            num_train_epochs=3,
+            save_strategy="epoch"
+        )
+        trainer = Trainer(
+            model=model,
+            args=training_arguments,
+            train_dataset=tokenized_train_dataset,
+            data_collator=data_collator
+        )
+        trainer.train()
