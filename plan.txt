@@ -133,36 +133,46 @@ for splitname in [train-original, train-augmented-wordnet, ...]
     save model to FILENAME (done by Trainer automatically)
 
 ######################################################
+### run benchmarks
+######################################################
+
+print column headers (Accuracy, F1 Score, etc..)
+for MODELNAME in models/.. directories:
+    model, tokenizer = get latest checkpoint
+    load test dataset
+    print model name + metrics
+
+######################################################
 ### evaluate
 ######################################################
 
-MODELNAME = model name
+def evaluate(model, tokenizer, dataset):
+    tp = 0
+    tn = 0
+    fp = 0
+    fn = 0
+    correct = [0,0]
+    guesses = [0,0]
 
-load test dataset
-load MODELNAME model and tokenizer
+    for prompt, label in dataset:
+        with torch no grad:
+            output = feed prompt to model and get output
 
-tp = 0
-tn = 0
-fp = 0
-fn = 0
-nan = 0 # number of times model answered neither yes or no
+        answer = output argmax
+        correct[label] += 1
+        guesses[answer] += 1
+        if answer = yes:
+            if label = yes:
+                tp++
+            else fp++
+        else:
+            if label = yes:
+                fn++
+            else tn++
 
-for prompt,label in dataset:
-    with torch no grad:
-        output = feed prompt to model
-    answer = output[0..2]
-    if answer = yes:
-        if label = yes:
-            tp++
-        else fp++
-    elif answer = no:
-        if label = yes:
-            fn++
-        else tn++
-    else
-        nan++
+    accuracy = (tp+tn) / N
+    precision = tp / tp+fp
+    recall = tp / tp+fn
+    f1 score = (2*tp) / (2*tp+fp+fn)
 
-accuracy = (tp+tn) / N
-precision = tp / tp+fp
-recall = tp / tp+fn
-f1 score = (2*tp) / (2*tp+fp+fn)
+    return accuracy, precision ... correct, guesses
