@@ -121,15 +121,14 @@ save dataset to file
 ### fine tune model
 ######################################################
 
-MODELNAME = model name
-SPLIT = training split to use (ex. train-original, train-augmented-wordnet, ...)
-DIR = directory to save model to
+DIRS = [bert, ...]
+MODELNAMES = [google-bert/bert-base-uncased, ...]
+SPLITS = [train-original, train-augmented-wordnet, ...]
 
-for splitname in [train-original, train-augmented-wordnet, ...]
-    load MODELNAME model and tokenizer
-    training_arguments = ... (constant for every train except for directory)
+for dir, mname, split in DIRS, MODELNAMES, SPLITS:
+    load model and tokenizer
+    training_arguments = ... (same settings each loop, except for directory)
     train model using Trainer
-    print metrics on val dataset
     save model to FILENAME (done by Trainer automatically)
 
 ######################################################
