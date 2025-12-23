@@ -1,4 +1,4 @@
-import torch
+import math, torch
 
 def eval_model(model, tokenizer, ds):
     tp = 0
@@ -32,10 +32,17 @@ def eval_model(model, tokenizer, ds):
                 tn += 1
     
     return {
-        'accuracy': (tp+tn)/len(ds),# accuracy
-        'precision': tp/(tp+fp),    # precision
-        'recall': tp/(tp+fn),       # recall
-        'f1': (2*tp)/(2*tp+fp+fn),  # f1 score
+        # accuracy
+        'accuracy': (tp+tn)/len(ds),
+        # precision
+        'precision': tp/(tp+fp) if (tp+fp) > 0 else 0.0,
+        # recall
+        'recall': tp/(tp+fn) if (tp+fn) > 0 else 0.0,
+        # f1 score
+        'f1': (2*tp)/(2*tp+fp+fn) if (2*tp+fp+fn) != 0 else 0.0,
+        # matthew correlation coefficent
+        'mcc': (tp*tn-fp*fn) / math.sqrt((tp+fn)*(tp+fp)*(tn+fp)*(tn+fn)) if ((tp+fn)*(tp+fp)*(tn+fp)*(tn+fn)) != 0 else 0.0,
+        # label counts 
         'correct': correct,
         'guesses': guesses
     }
