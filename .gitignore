@@ -3,3 +3,4 @@ unused
 dataset.hf
 diagrams
 models
+__pycache__
