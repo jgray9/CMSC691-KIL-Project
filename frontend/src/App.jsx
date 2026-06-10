@@ -17,6 +17,10 @@ function App() {
   return (
     <>
       TODO: add frontend
+      <button onClick={() => api.then(api => api.create_dataset('arg'))}>click</button>
+      <button onClick={() => api.then(api => api.get_datasets('arg'))}>click</button>
+      <button onClick={() => api.then(api => api.get_dataset('arg'))}>click</button>
+      <button onClick={() => api.then(api => api.delete_dataset('arg'))}>click</button>
     </>
   )
 }
