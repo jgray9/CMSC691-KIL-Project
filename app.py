@@ -1,4 +1,4 @@
-import os, sys, webview
+import os, sys, webview, re
 from datasets import load_dataset, load_from_disk
 
 def get_filenames(dir):
@@ -18,6 +18,11 @@ def to_prompts(batch):
 
 class Api:
     def create_dataset(name):
+        if f'{name}.hf' in get_filenames('datasets'):
+            raise FileExistsError('A dataset with this name already exists!')
+        if re.search(r'[^\w\d _-]', name) != None:
+            raise ValueError('Dataset name cannot contain any special characters besides _ and -')
+        
         dataset = load_dataset('nyu-mll/glue', 'mrpc')
         # add new prompt column and delete irrelevant columns
         # [idx, sentence1, sentence2, label] -> [text, label]
@@ -32,10 +37,16 @@ class Api:
         return get_filenames('datasets')
 
     def get_dataset(name):
+        if f'{name}.hf' not in get_filenames('datasets'):
+            raise FileNotFoundError('No dataset with this name exists!')
+        
         dataset = load_from_disk(f'datasets/{name}.hf')
         print(dataset)
 
     def delete_dataset(name):
+        if f'{name}.hf' not in get_filenames('datasets'):
+            raise FileNotFoundError('No dataset with this name exists!')
+        
         path = f'datasets/{name}.hf'
         for file in get_filenames(path):
             os.remove(f'{path}/{file}')
