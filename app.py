@@ -1,17 +1,45 @@
-import sys, webview
+import os, sys, webview
+from datasets import load_dataset, load_from_disk
+
+def get_filenames(dir):
+    try:
+        return os.listdir(dir)
+    except FileNotFoundError:
+        os.mkdir(dir)
+        return []
+
+# takes a batch of rows and creates a new prompt column named 'text'
+# prompt column is the two input sentences reformatted into an LLM prompt
+def to_prompts(batch):
+    prompts = []
+    for sen1, sen2 in zip(batch['sentence1'], batch['sentence2']):
+        prompts.append(f"Sentence1: {sen1}\nSentence2: {sen2}\nDo these sentences mean the same thing? Respond with 1 if they do, or 0 if they don't.")
+    return {'text': prompts}
 
 class Api:
     def create_dataset(name):
-        print(f'called create_dataset({name})')
+        dataset = load_dataset('nyu-mll/glue', 'mrpc')
+        # add new prompt column and delete irrelevant columns
+        # [idx, sentence1, sentence2, label] -> [text, label]
+        dataset['train'].map(
+            to_prompts,
+            batched=True,
+            batch_size=16,
+            remove_columns=['sentence1','sentence2','idx']
+        ).save_to_disk(f'datasets/{name}.hf')
     
-    def get_datasets(name):
-        print(f'called get_datasets({name})')
+    def get_datasets():
+        return get_filenames('datasets')
 
     def get_dataset(name):
-        print(f'called get_dataset({name})')
+        dataset = load_from_disk(f'datasets/{name}.hf')
+        print(dataset)
 
     def delete_dataset(name):
-        print(f'called delete_dataset({name})')
+        path = f'datasets/{name}.hf'
+        for file in get_filenames(path):
+            os.remove(f'{path}/{file}')
+        os.rmdir(path)
 
 if __name__ == '__main__':
     debug = len(sys.argv) > 1
