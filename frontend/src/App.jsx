@@ -2,8 +2,16 @@ import './App.css'
 
 function App() {
   let api = new Promise(res => {
-    if(window.pywebview !== undefined) res(window.pywebview.api)
-    else setTimeout(() => res(window.pywebview.api), 100);
+    // if api is not loaded it, repeatedly check until it is
+    if(window.pywebview === undefined) {
+      let id = setInterval(() => {
+        if(window.pywebview === undefined) return;
+        res(window.pywebview.api)
+        clearTimeout(id);
+      }, 10);
+    // if api is loaded, resolve with it without making timer
+    } else
+      res(window.pywebview.api)
   });
 
   return (
