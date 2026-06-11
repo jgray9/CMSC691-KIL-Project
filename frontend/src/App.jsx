@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react'
 import './App.css'
 
 function DatasetButtons({ api }) {
+  const [datasetName, setDatasetName] = useState('');
+
   return <>
     <button onClick={
-      () => api.create_dataset('arg')
+      () => api.create_dataset(datasetName)
         .catch(e => console.log(`caught error ${e}`))
     }>Create Dataset</button>
 
@@ -15,15 +17,17 @@ function DatasetButtons({ api }) {
     }>Get Datasets</button>
 
     <button onClick={
-      () => api.get_dataset('arg')
+      () => api.get_dataset(datasetName)
         .then(console.log)
         .catch(e => console.log(`caught error ${e}`))
     }>Get Dataset</button>
 
     <button onClick={
-      () => api.delete_dataset('arg')
+      () => api.delete_dataset(datasetName)
         .catch(e => console.log(`caught error ${e}`))
     }>Delete Dataset</button>
+
+    <input name='dataset-name' onChange={e => setDatasetName(e.target.value)} />
   </>
 }
 
