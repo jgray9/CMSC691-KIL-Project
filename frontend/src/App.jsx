@@ -6,25 +6,19 @@ function DatasetButtons({ api }) {
 
   return <>
     <button onClick={
-      () => api.create_dataset(datasetName)
-        .catch(e => console.log(`caught error ${e}`))
+      () => api.create_dataset(datasetName).then(console.log)
     }>Create Dataset</button>
 
     <button onClick={
-      () => api.get_datasets()
-        .then(console.log)
-        .catch(e => console.log(`caught error ${e}`))
+      () => api.get_datasets().then(console.log)
     }>Get Datasets</button>
 
     <button onClick={
-      () => api.get_dataset(datasetName)
-        .then(console.log)
-        .catch(e => console.log(`caught error ${e}`))
+      () => api.get_dataset(datasetName).then(console.log)
     }>Get Dataset</button>
 
     <button onClick={
-      () => api.delete_dataset(datasetName)
-        .catch(e => console.log(`caught error ${e}`))
+      () => api.delete_dataset(datasetName).then(console.log)
     }>Delete Dataset</button>
 
     <input name='dataset-name' onChange={e => setDatasetName(e.target.value)} />

@@ -19,9 +19,11 @@ def to_prompts(batch):
 class Api:
     def create_dataset(name):
         if f'{name}.hf' in get_filenames('datasets'):
-            raise FileExistsError('A dataset with this name already exists!')
+            return 'A dataset with this name already exists'
         if re.search(r'[^\w\d _-]', name) != None:
-            raise ValueError('Dataset name cannot contain any special characters besides _ and -')
+            return 'Dataset name cannot contain any special characters besides _ and -'
+        if len(name) == 0:
+            return 'Dataset name cannot be empty'
         
         dataset = load_dataset('nyu-mll/glue', 'mrpc')
         # add new prompt column and delete irrelevant columns
@@ -32,25 +34,28 @@ class Api:
             batch_size=16,
             remove_columns=['sentence1','sentence2','idx']
         ).save_to_disk(f'datasets/{name}.hf')
+        return 'success'
     
     def get_datasets():
         return get_filenames('datasets')
 
     def get_dataset(name):
         if f'{name}.hf' not in get_filenames('datasets'):
-            raise FileNotFoundError('No dataset with this name exists!')
+            return 'No dataset with this name exists'
         
         dataset = load_from_disk(f'datasets/{name}.hf')
         print(dataset)
+        return 'success'
 
     def delete_dataset(name):
         if f'{name}.hf' not in get_filenames('datasets'):
-            raise FileNotFoundError('No dataset with this name exists!')
+            return 'No dataset with this name exists'
         
         path = f'datasets/{name}.hf'
         for file in get_filenames(path):
             os.remove(f'{path}/{file}')
         os.rmdir(path)
+        return 'success'
 
 if __name__ == '__main__':
     debug = len(sys.argv) > 1
