@@ -1,13 +1,26 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 
+function CreateDatasetButton({ api, name }) {
+  const [isCreating, setIsCreating] = useState(false);
+
+  function createDataset() {
+    setIsCreating(true);
+    api.create_dataset(name).then(res => {
+      setIsCreating(false);
+    });
+  }
+
+  if(isCreating)
+    return <button>Creating...</button>
+  return <button onClick={createDataset}>Create Dataset</button>
+}
+
 function DatasetButtons({ api }) {
   const [datasetName, setDatasetName] = useState('');
 
   return <>
-    <button onClick={
-      () => api.create_dataset(datasetName).then(console.log)
-    }>Create Dataset</button>
+    <CreateDatasetButton api={api} name={datasetName}/>
 
     <button onClick={
       () => api.get_datasets().then(console.log)
