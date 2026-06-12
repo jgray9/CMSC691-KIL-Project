@@ -37,7 +37,14 @@ class Api:
         return 'success'
     
     def get_datasets():
-        return get_filenames('datasets')
+        output = []
+        for name in get_filenames('datasets'):
+            ds = load_from_disk(f'datasets/{name}')
+            output.append({
+                'name': name,
+                'rows': len(ds)
+            })
+        return output
 
     def get_dataset(name):
         if f'{name}.hf' not in get_filenames('datasets'):
