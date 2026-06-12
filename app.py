@@ -44,8 +44,10 @@ class Api:
             return 'No dataset with this name exists'
         
         dataset = load_from_disk(f'datasets/{name}.hf')
-        print(dataset)
-        return 'success'
+        return {
+            'name': name,
+            'rows': len(dataset)
+        }
 
     def delete_dataset(name):
         if f'{name}.hf' not in get_filenames('datasets'):
