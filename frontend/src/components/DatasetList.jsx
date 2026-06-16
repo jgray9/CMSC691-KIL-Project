@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 function CreateDatasetButton({ api, name, callback }) {
   const [isCreating, setIsCreating] = useState(false);
@@ -20,12 +20,13 @@ function DatasetList({ api }) {
   const [datasetName, setDatasetName] = useState('');
   const [datasetList, setDatasetList] = useState([]);
 
-  function update_datasets() {
+  const update_datasets = useCallback(() => {
     api.get_datasets().then(setDatasetList);
-    return;
-  }
+  }, [api]);
 
-  useEffect(update_datasets, []);
+  useEffect(() => {
+    update_datasets();
+  }, [update_datasets]);
 
   return <>
     <CreateDatasetButton
