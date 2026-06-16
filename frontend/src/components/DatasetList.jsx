@@ -11,9 +11,9 @@ function CreateDatasetButton({ api, name, callback }) {
     });
   }
 
-  if (isCreating)
-    return <button>Creating...</button>
-  return <button onClick={createDataset}>Create Dataset</button>
+  return <button onClick={createDataset} disabled={isCreating}>
+    {isCreating ? 'Creating...' : 'Create Dataset'}
+  </button>
 }
 
 function DatasetList({ api }) {
