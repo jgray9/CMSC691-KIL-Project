@@ -1,24 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 
-function CreateDatasetButton({ api, name, callback }) {
-  const [isCreating, setIsCreating] = useState(false);
-
-  function createDataset() {
-    setIsCreating(true);
-    api.create_dataset(name).then(res => {
-      setIsCreating(false);
-      callback();
-    });
-  }
-
-  return <button onClick={createDataset} disabled={isCreating}>
-    {isCreating ? 'Creating...' : 'Create Dataset'}
-  </button>
-}
-
 function DatasetList({ api }) {
   const [datasetName, setDatasetName] = useState('');
   const [datasetList, setDatasetList] = useState([]);
+  const [isCreating, setIsCreating] = useState(false);
+
+  const create_dataset = () => {
+    setIsCreating(true);
+    api.create_dataset(datasetName)
+      .then(update_datasets)
+      .finally(() => setIsCreating(false));
+  };
 
   const update_datasets = useCallback(() => {
     api.get_datasets().then(setDatasetList);
@@ -29,11 +21,9 @@ function DatasetList({ api }) {
   }, [update_datasets]);
 
   return <>
-    <CreateDatasetButton
-      api={api}
-      name={datasetName}
-      callback={update_datasets}
-    />
+    <button onClick={create_dataset} disabled={isCreating}>
+      {isCreating ? 'Creating...' : 'Create Dataset'}
+    </button>
 
     <button onClick={
       () => api.delete_dataset(datasetName).then(update_datasets)
