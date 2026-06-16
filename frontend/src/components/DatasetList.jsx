@@ -35,14 +35,6 @@ function DatasetList({ api }) {
     />
 
     <button onClick={
-      () => api.get_datasets().then(update_datasets)
-    }>Get Datasets</button>
-
-    <button onClick={
-      () => api.get_dataset(datasetName).then(console.log)
-    }>Get Dataset</button>
-
-    <button onClick={
       () => api.delete_dataset(datasetName).then(update_datasets)
     }>Delete Dataset</button>
 
